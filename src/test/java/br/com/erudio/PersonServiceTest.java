@@ -3,12 +3,27 @@ package br.com.erudio;
 import br.com.isaque.IPersonService;
 import br.com.isaque.PersonService;
 import br.com.isaque.model.Person;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class PersonServiceTest {
+
+    Person person;
+
+    @BeforeEach
+    void setup () {
+         person = new Person(
+                "Keith",
+                "Moon",
+                "kmoon@erudio.com",
+                "Wembley - UK",
+                "Male"
+        );
+    }
 
     @DisplayName("When Create a Person with Success Should Return a Person Object")
     @Test
@@ -30,6 +45,20 @@ public class PersonServiceTest {
 
         //THEN / ASSERT
         assertNotNull(actual, () -> "The createPerson() should not have returned null!");
+    }
+
+    @DisplayName("When Create a Person with Success Should Contains FirstName in Returned a Person Object")
+    @Test
+    void testCreatePerson_WhenSuccess_ShouldContainsFirstNameInReturnedPersonObject() {
+
+        // GIVEN / ARRANGE
+        IPersonService service = new PersonService();
+
+        // WHEN / ACT
+        Person actual = service.createPerson(person);
+
+        //THEN / ASSERT
+        assertEquals(person.getFirstName(), actual.getFirstName(), () -> "The FirstName is Different!");
     }
 
 }
