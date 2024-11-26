@@ -7,8 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class PersonServiceTest {
 
@@ -44,12 +43,13 @@ public class PersonServiceTest {
        Person actual = service.createPerson(person);
 
         //THEN / ASSERT
+        assertNotNull(person.getId(), () -> "Person ID is Missing");
         assertNotNull(actual, () -> "The createPerson() should not have returned null!");
     }
 
-    @DisplayName("When Create a Person with Success Should Contains FirstName in Returned a Person Object")
+    @DisplayName("When Create a Person with Success Should Contains valid Fields in Returned Person Object")
     @Test
-    void testCreatePerson_WhenSuccess_ShouldContainsFirstNameInReturnedPersonObject() {
+    void testCreatePerson_WhenSuccess_ShouldContainsValidFieldsInReturnedPersonObject() {
 
         // GIVEN / ARRANGE
         IPersonService service = new PersonService();
@@ -58,7 +58,31 @@ public class PersonServiceTest {
         Person actual = service.createPerson(person);
 
         //THEN / ASSERT
-        assertEquals(person.getFirstName(), actual.getFirstName(), () -> "The FirstName is Different!");
+        assertEquals(person.getFirstName(), actual.getFirstName(), () -> "The Person FirstName is Incorrect!");
+
+        assertEquals(person.getLastName(), actual.getLastName(), () -> "The Person LastName is Incorrect!");
+
+        assertEquals(person.getAddress(), actual.getAddress(), () -> "The Person Address is Incorrect!");
+
+        assertEquals(person.getGender(), actual.getGender(), () -> "The Person Gender is Incorrect!");
+
+        assertEquals(person.getEmail(), actual.getEmail(), () -> "The Person email is Incorrect!");
+
     }
 
+    @DisplayName("When Create a Person with null e-mail Should throw Exception")
+    @Test
+    void testCreatePerson_WithNullEmail_ShouldThrowIllegalArgumentException() {
+        // Given / Arrannge
+        IPersonService service = new PersonService();
+        person.setEmail(null);
+
+        // When / Act
+        /// Then / Assert
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> service.createPerson(person),
+                () -> "Empty e-mail should have cause an IllegalArgumentException!"
+        );
+    }
 }
